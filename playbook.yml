@@ -1,0 +1,128 @@
+# Ansible Playbook to manage Space Babies hosts
+# Based on https://github.com/jlund/mazer-rackham
+---
+- hosts:        all
+  remote_user:  deploy
+  sudo:         yes
+
+  tasks:
+
+  - apt:        upgrade=yes
+                update_cache=yes
+
+  - name:       Configure SSH to only allow key-based auth
+    lineinfile: dest=/etc/ssh/sshd_config
+                regexp="^#?PasswordAuthentication"
+                line="PasswordAuthentication no"
+    lineinfile: dest=/etc/ssh/sshd_config
+                regexp="^#?PermitRootLogin"
+                line="PermitRootLogin no"
+    lineinfile: dest=/etc/ssh/sshd_config
+                regexp="^#?PubkeyAuthentication"
+                line="PubkeyAuthentication yes"
+    notify:
+      - Restart SSH
+
+  - name:       Install prerequisite packages that are nesessary to compile applications and gems with native extensions
+    apt:        pkg={{ item }} state=present
+    with_items: prerequisites
+
+  - name:               Setup authorized keys for the deploy user
+    authorized_key:     user=deploy
+                        key="{{ item }}"
+    with_file:
+      - public_keys/joost-fabric.pub
+                        
+  - command:    ufw default deny
+  - command:    ufw limit ssh
+  - command:    ufw allow http
+  - command:    ufw allow https
+  - command:    ufw --force enable
+
+  vars:
+    prerequisites:
+      - git-core
+      - unattended-upgrades
+
+  handlers:
+    - name:     Restart SSH
+      service:  name=ssh
+                state=restarted
+
+
+- hosts:        rails
+  remote_user:  deploy
+  sudo:         yes
+
+  tasks:
+
+  - name:       Install Ruby dependencies
+    apt:        pkg={{ item }} state=present
+    with_items: ruby_dependencies
+
+  - name:       Download the Ruby source
+    get_url:    url={{ ruby_download_location }}
+                dest=/usr/local/src/{{ ruby_version }}.tar.bz2
+                sha256sum={{ ruby_checksum }}
+
+  - name:       Generate the Ruby installation script on the server
+    template:   src=templates/ruby.j2
+                dest=/usr/local/src/install-ruby.sh
+                owner=root
+                group=root
+                mode=700
+
+  - name:       Run the Ruby installation script
+    command:    /usr/local/src/install-ruby.sh
+                creates=/usr/local/src/{{ ruby_version }}/ruby
+
+  - name:       Install bundler
+    command:    "gem install bundler --no-rdoc --no-ri
+                creates=/usr/local/bin/bundle"
+
+  - name:       Ensure the Phusion PGP key is installed
+    apt_key:    id=AC40B2F7 state=present url="http://keyserver.ubuntu.com/pks/lookup?op=get&fingerprint=on&search=0x561F9B9CAC40B2F7"
+
+  - name:       Install Rails dependencies
+    apt:        pkg={{ item }} state=present
+    with_items: rails_dependencies
+
+  - name:               Ensure the passenger apt repository is added
+    apt_repository:     state=present repo='deb https://oss-binaries.phusionpassenger.com/apt/passenger precise main'
+  
+  - name:       Ensure nginx is installed
+    apt:        pkg=nginx-full state=present
+
+  - name:       Ensure passenger is installed
+    apt:        pkg=passenger state=present update_cache=yes
+  
+  - name:       Ensure the nginx configuration file is set
+    template:   src=templates/nginx.j2
+                dest=/etc/nginx/nginx.conf
+                owner=root
+                group=root
+                mode=700
+    notify:
+      - Restart nginx
+
+  - name:       Ensure nginx is running
+    service:    name=nginx state=started enabled=yes
+
+  handlers:
+    - name:     Restart nginx
+      service:  name=nginx
+                state=restarted
+
+  vars:
+    ruby_dependencies:
+      - autoconf
+      - build-essential
+      - libssl-dev
+      - zlib1g-dev
+    rails_dependencies:
+      - libcurl4-openssl-dev
+      - nodejs
+      - apt-transport-https
+    ruby_version:           "ruby-2.0.0-p353"
+    ruby_checksum:          "3de4e4d9aff4682fa4f8ed2b70bd0d746fae17452fc3d3a8e8f505ead9105ad9"
+    ruby_download_location: "http://cache.ruby-lang.org/pub/ruby/2.0/{{ ruby_version }}.tar.bz2"
