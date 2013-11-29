@@ -76,9 +76,11 @@
     command:    /usr/local/src/install-ruby.sh
                 creates=/usr/local/src/{{ ruby_version }}/ruby
 
-  - name:       Install bundler
-    command:    "gem install bundler --no-rdoc --no-ri
+  - command:    "gem install bundler --no-rdoc --no-ri
                 creates=/usr/local/bin/bundle"
+
+  - command:    "gem install passenger --version {{ passenger_version }} --no-rdoc --no-ri
+                creates=/usr/local/lib/ruby/gems/2.0.0/gems/{{ passenger_version }}
 
   - name:       Ensure the Phusion PGP key is installed
     apt_key:    id=AC40B2F7 state=present url="http://keyserver.ubuntu.com/pks/lookup?op=get&fingerprint=on&search=0x561F9B9CAC40B2F7"
@@ -126,3 +128,4 @@
     ruby_version:           "ruby-2.0.0-p353"
     ruby_checksum:          "3de4e4d9aff4682fa4f8ed2b70bd0d746fae17452fc3d3a8e8f505ead9105ad9"
     ruby_download_location: "http://cache.ruby-lang.org/pub/ruby/2.0/{{ ruby_version }}.tar.bz2"
+    passenger_version:      "4.0.26"
