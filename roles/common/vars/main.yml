@@ -1,0 +1,5 @@
+---
+
+prerequisites:
+  - git-core
+  - unattended-upgrades

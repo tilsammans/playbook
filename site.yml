@@ -1,0 +1,15 @@
+# Ansible Playbook to manage Space Babies hosts
+# Based on https://github.com/jlund/mazer-rackham
+---
+- hosts:        all
+  remote_user:  root
+
+  roles:
+    - common
+
+- hosts:        rails
+  remote_user:  root
+
+  roles:
+    - rails
+

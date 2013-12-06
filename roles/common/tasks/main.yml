@@ -1,0 +1,37 @@
+---
+# Defines tasks applicable across all machines in the infrastructure.
+
+- apt:        upgrade=yes
+              update_cache=yes
+
+- name:       Configure SSH to only allow key-based auth
+  lineinfile: dest=/etc/ssh/sshd_config
+              regexp="^#?PasswordAuthentication"
+              line="PasswordAuthentication no"
+  lineinfile: dest=/etc/ssh/sshd_config
+              regexp="^#?PubkeyAuthentication"
+              line="PubkeyAuthentication yes"
+  notify:
+    - Restart SSH
+
+- name:       Install essential packages for every server
+  apt:        pkg={{ item }} state=present
+  with_items: prerequisites
+
+- name:               Setup authorized keys for root
+  authorized_key:     user=root
+                      key="{{ item }}"
+  with_file:
+    - joost-fabric.pub
+
+- name:               Setup authorized keys for the deploy user
+  authorized_key:     user=deploy
+                      key="{{ item }}"
+  with_file:
+    - joost-fabric.pub
+                      
+- command:    ufw default deny
+- command:    ufw limit ssh
+- command:    ufw allow http
+- command:    ufw allow https
+- command:    ufw --force enable
