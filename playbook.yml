@@ -2,8 +2,6 @@
 # Based on https://github.com/jlund/mazer-rackham
 ---
 - hosts:        all
-  remote_user:  deploy
-  sudo:         yes
 
   tasks:
 
@@ -14,9 +12,6 @@
     lineinfile: dest=/etc/ssh/sshd_config
                 regexp="^#?PasswordAuthentication"
                 line="PasswordAuthentication no"
-    lineinfile: dest=/etc/ssh/sshd_config
-                regexp="^#?PermitRootLogin"
-                line="PermitRootLogin no"
     lineinfile: dest=/etc/ssh/sshd_config
                 regexp="^#?PubkeyAuthentication"
                 line="PubkeyAuthentication yes"
@@ -51,10 +46,10 @@
 
 
 - hosts:        rails
-  remote_user:  deploy
-  sudo:         yes
 
   tasks:
+
+  - user:       name=deploy
 
   - name:       Install Ruby dependencies
     apt:        pkg={{ item }} state=present
@@ -68,9 +63,6 @@
   - name:       Generate the Ruby installation script on the server
     template:   src=templates/ruby.j2
                 dest=/usr/local/src/install-ruby.sh
-                owner=root
-                group=root
-                mode=700
 
   - name:       Run the Ruby installation script
     command:    /usr/local/src/install-ruby.sh
@@ -95,15 +87,9 @@
   - name:       Ensure nginx is installed
     apt:        pkg=nginx-full state=present
 
-  - name:       Ensure passenger is installed
-    apt:        pkg=passenger state=present update_cache=yes
-  
   - name:       Ensure the nginx configuration file is set
     template:   src=templates/nginx.j2
                 dest=/etc/nginx/nginx.conf
-                owner=root
-                group=root
-                mode=700
     notify:
       - Restart nginx
 
