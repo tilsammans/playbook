@@ -12,14 +12,14 @@
               sha256sum={{ ruby_checksum }}
 
 - name:       Generate the Ruby installation script on the server
-  template:   src=templates/ruby.j2
+  template:   src=ruby.j2
               dest=/usr/local/src/install-ruby.sh
 
 - name:       Run the Ruby installation script
   command:    /usr/local/src/install-ruby.sh
               creates=/usr/local/src/{{ ruby_version }}/ruby
 
-- copy:       src=templates/gemrc dest=/etc/gemrc
+- copy:       src=gemrc dest=/etc/gemrc
 
 - command:    "gem install bundler
               creates=/usr/local/bin/bundle"
@@ -41,7 +41,7 @@
   apt:        pkg=nginx-full state=present
 
 - name:       Ensure the nginx configuration file is set
-  template:   src=templates/nginx.j2
+  template:   src=nginx.j2
               dest=/etc/nginx/nginx.conf
   notify:
     - Restart nginx
