@@ -68,10 +68,12 @@
     command:    /usr/local/src/install-ruby.sh
                 creates=/usr/local/src/{{ ruby_version }}/ruby
 
-  - command:    "gem install bundler --no-rdoc --no-ri
+  - copy:       src=templates/gemrc dest=/etc/gemrc
+
+  - command:    "gem install bundler
                 creates=/usr/local/bin/bundle"
 
-  - command:    "gem install passenger --version {{ passenger_version }} --no-rdoc --no-ri
+  - command:    "gem install passenger --version {{ passenger_version }}
                 creates=/usr/local/lib/ruby/gems/2.0.0/gems/{{ passenger_version }}
 
   - name:       Ensure the Phusion PGP key is installed
