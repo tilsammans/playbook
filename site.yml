@@ -2,13 +2,15 @@
 # Based on https://github.com/jlund/mazer-rackham
 ---
 - hosts:        all
-  remote_user:  root
+  remote_user:  joost
+  sudo:         yes
 
   roles:
     - common
 
 - hosts:        rails
-  remote_user:  root
+  remote_user:  joost
+  sudo:         yes
 
   roles:
     - rails
