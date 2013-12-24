@@ -2,6 +2,12 @@
 
 - user:       name=deploy
 
+- name:               Setup authorized keys for the deploy user
+  authorized_key:     user=deploy
+                      key="{{ item }}"
+  with_file:
+    - joost-fabric.pub
+
 - name:       Install Ruby dependencies
   apt:        pkg={{ item }} state=present
   with_items: ruby_dependencies

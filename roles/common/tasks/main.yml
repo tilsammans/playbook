@@ -24,12 +24,6 @@
   with_file:
     - joost-fabric.pub
 
-- name:               Setup authorized keys for the deploy user
-  authorized_key:     user=deploy
-                      key="{{ item }}"
-  with_file:
-    - joost-fabric.pub
-                      
 - command:    ufw default deny
 - command:    ufw limit ssh
 - command:    ufw allow http
