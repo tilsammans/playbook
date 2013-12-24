@@ -5,6 +5,7 @@ ruby_dependencies:
   - build-essential
   - libssl-dev
   - zlib1g-dev
+  - python-pycurl
 rails_dependencies:
   - libcurl4-openssl-dev
   - nodejs

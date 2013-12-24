@@ -20,10 +20,11 @@
 - name:       Generate the Ruby installation script on the server
   template:   src=ruby.j2
               dest=/usr/local/src/install-ruby.sh
+              mode=0700
 
 - name:       Run the Ruby installation script
   command:    /usr/local/src/install-ruby.sh
-              creates=/usr/local/src/{{ ruby_version }}/ruby
+              creates=/usr/local/bin/ruby
 
 - copy:       src=gemrc dest=/etc/gemrc
 
@@ -40,11 +41,17 @@
   apt:        pkg={{ item }} state=present
   with_items: rails_dependencies
 
-#- name:       Ensure the nginx configuration file is set
-#  template:   src=nginx.j2
-#              dest=/etc/nginx/nginx.conf
-#  notify:
-#    - Restart nginx
+- name:       Install nginx config and virtual hosts
+  template:   src={{ item.src }}
+              dest={{ item.dest }}
+              backup=yes
+  with_items:
+    - { src: 'default.j2',      dest: '/etc/nginx/sites-available/default' }
+    - { src: 'redirect.j2',     dest: '/etc/nginx/sites-available/redirect' }
+    - { src: 'staging.j2',      dest: '/etc/nginx/sites-available/staging' }
+    - { src: 'nginx.j2',        dest: '/etc/nginx/nginx.conf' }
+  notify:
+    - Restart nginx
 
 - name:       Ensure nginx is running
   service:    name=nginx state=started enabled=yes
