@@ -24,21 +24,15 @@
 - command:    "gem install bundler
               creates=/usr/local/bin/bundle"
 
-- command:    "gem install passenger --version {{ passenger_version }}
-              creates=/usr/local/lib/ruby/gems/2.0.0/gems/passenger-{{ passenger_version }}"
-
 - name:       Ensure the Phusion PGP key is installed
   apt_key:    id=AC40B2F7 state=present url="http://keyserver.ubuntu.com/pks/lookup?op=get&fingerprint=on&search=0x561F9B9CAC40B2F7"
-
-- name:       Install Rails dependencies
-  apt:        pkg={{ item }} state=present
-  with_items: rails_dependencies
 
 - name:               Ensure the passenger apt repository is added
   apt_repository:     state=present repo='deb https://oss-binaries.phusionpassenger.com/apt/passenger precise main'
 
-- name:       Ensure nginx is installed
-  apt:        pkg=nginx-full state=present
+- name:       Install Rails dependencies
+  apt:        pkg={{ item }} state=present
+  with_items: rails_dependencies
 
 - name:       Ensure the nginx configuration file is set
   template:   src=nginx.j2
