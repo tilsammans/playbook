@@ -1,8 +1,10 @@
-# staging
+# staging server
+# {{ ansible_managed }}
+#
 server {
 	listen			[::]:80;
-	server_name  		staging.dedigitaletopschool.nl;
-	root			/web/staging.dedigitaletopschool.nl/current/public;
+	server_name  		staging.{{ domain }};
+	root			/var/www/staging/current/public;
 	passenger_enabled	on;
 	rails_env		staging;
 

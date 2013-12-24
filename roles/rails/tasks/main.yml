@@ -41,6 +41,16 @@
   apt:        pkg={{ item }} state=present
   with_items: rails_dependencies
 
+- name:       Generate SSL Certificate Signing Request
+  command:    openssl req -nodes -newkey rsa:2048 -keyout /etc/ssl/private/{{ domain }}.key -out /etc/ssl/private/{{ domain }}.csr -subj "{{ ssl_subject }}" creates=/etc/ssl/private/{{ domain }}.key
+
+- name:       Generate self-signed certificate, to be replaced with a CA signed one
+  command:    openssl x509 -req -days 365 -in /etc/ssl/private/{{ domain }}.csr -signkey /etc/ssl/private/{{ domain }}.key -out /etc/ssl/private/{{ domain }}.cer 
+
+- file:       path=/etc/ssl/private/{{ domain }}.key mode=0600
+- file:       path=/etc/ssl/private/{{ domain }}.csr mode=0600
+- file:       path=/etc/ssl/private/{{ domain }}.cer mode=0600
+
 - name:       Install nginx config and virtual hosts
   template:   src={{ item.src }}
               dest={{ item.dest }}

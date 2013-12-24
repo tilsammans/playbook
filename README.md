@@ -11,6 +11,14 @@ To run the playbook, first install Ansible and put the hosts to be provisioned i
 hostname.example.com
 ```
 
+You must place host variables in `/etc/ansible/host_vars/hostname.example.com`:
+
+```
+---
+domain: example.com
+ssl_subject: "/C=NL/ST=NH/L=Amsterdam/O=Acme, Inc/OU=L33t Haxxor Dept./CN=www.example.com"
+```
+
 ## Running
 
 To run the entire playbook and provision/update the server:

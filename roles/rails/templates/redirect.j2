@@ -1,7 +1,9 @@
-# redirect everything else away
+# redirect everything we listen do, but don't serve
+# {{ ansible_managed }}
+#
 server {
 	listen			[::]:80;
-	server_name		dedigitaletopschool.nl www.dedigitaletopschool.nl digitaletopschool.nl www.digitaletopschool.nl;
-	return			301 https://www.dedigitaletopschool.nl$request_uri;
+	server_name		{{ domain }} www.{{ domain }};
+	return			301 https://www.{{ domain }}$request_uri;
 }
 
