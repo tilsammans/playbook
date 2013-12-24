@@ -1,0 +1,30 @@
+# our default, HTTPS server
+server {
+	listen   		[::]:443 default;
+	server_name		www.dedigitaletopschool.nl;
+
+	root			/web/www.dedigitaletopschool.nl/current/public;
+	passenger_enabled	on;
+
+	ssl 			on;
+	ssl_certificate		../cert/www.dedigitaletopschool.nl.crt;
+	ssl_certificate_key	../cert/www.dedigitaletopschool.nl.key;
+
+	ssl_ciphers			RC4:HIGH:!aNULL:!MD5;
+	ssl_prefer_server_ciphers	on;
+	ssl_session_timeout		10m;
+	ssl_session_cache		shared:SSL:10m;
+
+	location ~ ^/(assets|system)/ {
+		expires		1y;
+		add_header	Cache-Control public;
+		add_header	ETag "";
+		break;
+	}
+
+	location ~ \.php$ {
+		return 404;
+	}
+
+}
+

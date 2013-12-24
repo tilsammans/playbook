@@ -1,0 +1,7 @@
+# redirect everything else away
+server {
+	listen			[::]:80;
+	server_name		dedigitaletopschool.nl www.dedigitaletopschool.nl digitaletopschool.nl www.digitaletopschool.nl;
+	return			301 https://www.dedigitaletopschool.nl$request_uri;
+}
+

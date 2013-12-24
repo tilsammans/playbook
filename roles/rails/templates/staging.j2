@@ -1,0 +1,15 @@
+# staging
+server {
+	listen			[::]:80;
+	server_name  		staging.dedigitaletopschool.nl;
+	root			/web/staging.dedigitaletopschool.nl/current/public;
+	passenger_enabled	on;
+	rails_env		staging;
+
+	location / {
+		passenger_enabled on;
+		auth_basic "Staging";
+		auth_basic_user_file htpasswd;
+	}
+}
+
