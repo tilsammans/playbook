@@ -34,11 +34,11 @@
   apt:        pkg={{ item }} state=present
   with_items: rails_dependencies
 
-- name:       Ensure the nginx configuration file is set
-  template:   src=nginx.j2
-              dest=/etc/nginx/nginx.conf
-  notify:
-    - Restart nginx
+#- name:       Ensure the nginx configuration file is set
+#  template:   src=nginx.j2
+#              dest=/etc/nginx/nginx.conf
+#  notify:
+#    - Restart nginx
 
 - name:       Ensure nginx is running
   service:    name=nginx state=started enabled=yes
