@@ -51,6 +51,21 @@
 - file:       path=/etc/ssl/private/{{ domain }}.csr mode=0600
 - file:       path=/etc/ssl/private/{{ domain }}.cer mode=0600
 
+- name:       Create virtual host directory structure
+  file:       {{ item }} owner=deploy state=directory
+  with_items:
+    - /var/www
+    - /var/www/default
+    - /var/www/default/releases
+    - /var/www/default/releases/init
+    - /var/www/default/releases/init/public
+    - /var/www/default/shared
+    - /var/www/staging
+    - /var/www/staging/releases
+    - /var/www/staging/releases/init
+    - /var/www/staging/releases/init/public
+    - /var/www/staging/shared
+
 - name:       Install nginx config and virtual hosts
   template:   src={{ item.src }}
               dest={{ item.dest }}
