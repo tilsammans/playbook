@@ -52,19 +52,21 @@
 - file:       path=/etc/ssl/private/{{ domain }}.cer mode=0600
 
 - name:       Create virtual host directory structure
-  file:       {{ item }} owner=deploy state=directory
+  file:       path={{ item }} owner=deploy state=directory
   with_items:
-    - /var/www
-    - /var/www/default
-    - /var/www/default/releases
-    - /var/www/default/releases/init
     - /var/www/default/releases/init/public
     - /var/www/default/shared
-    - /var/www/staging
-    - /var/www/staging/releases
-    - /var/www/staging/releases/init
     - /var/www/staging/releases/init/public
     - /var/www/staging/shared
+
+- copy:       src=index.html dest=/var/www/default/releases/init/public/index.html owner=deploy
+- copy:       src=index.html dest=/var/www/staging/releases/init/public/index.html owner=deploy
+
+- file:       src=/var/www/default/releases/init dest=/var/www/default/current state=link
+- file:       src=/var/www/staging/releases/init dest=/var/www/staging/current state=link
+
+- name:       Enable the redirect virtual host
+  file:       src=/etc/nginx/sites-available/redirect dest=/etc/nginx/sites-enabled/redirect state=link
 
 - name:       Install nginx config and virtual hosts
   template:   src={{ item.src }}
