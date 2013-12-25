@@ -1,6 +1,7 @@
 # default HTTPS only server
 # {{ ansible_managed }}
 server {
+	listen			443 default;
 	listen   		[::]:443 default;
 	server_name		www.{{ domain }};
 

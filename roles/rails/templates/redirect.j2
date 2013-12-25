@@ -2,6 +2,7 @@
 # {{ ansible_managed }}
 #
 server {
+	listen			80;
 	listen			[::]:80;
 	server_name		{{ domain }} www.{{ domain }};
 	return			301 https://www.{{ domain }}$request_uri;
