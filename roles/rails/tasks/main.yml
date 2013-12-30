@@ -54,16 +54,16 @@
 - name:       Create virtual host directory structure
   file:       path={{ item }} owner=deploy state=directory
   with_items:
-    - /var/www/default/releases/init/public
-    - /var/www/default/shared
-    - /var/www/staging/releases/init/public
-    - /var/www/staging/shared
+    - /var/www/releases/init/public
+    - /var/www/shared
+    - /var/staging/releases/init/public
+    - /var/staging/shared
 
-- copy:       src=index.html dest=/var/www/default/releases/init/public/index.html owner=deploy
-- copy:       src=index.html dest=/var/www/staging/releases/init/public/index.html owner=deploy
+- copy:       src=index.html dest=/var/www/releases/init/public/index.html      owner=deploy
+- copy:       src=index.html dest=/var/staging/releases/init/public/index.html  owner=deploy
 
-- file:       src=/var/www/default/releases/init dest=/var/www/default/current state=link
-- file:       src=/var/www/staging/releases/init dest=/var/www/staging/current state=link
+- file:       src=/var/www/releases/init        dest=/var/www/current           state=link
+- file:       src=/var/staging/releases/init    dest=/var/staging/current       state=link
 
 - name:       Enable the redirect virtual host
   file:       src=/etc/nginx/sites-available/redirect dest=/etc/nginx/sites-enabled/redirect state=link
