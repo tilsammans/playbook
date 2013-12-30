@@ -1,0 +1,11 @@
+---
+# Configure remote machine to be a PostgreSQL server with development headers.
+
+- apt:                  pkg={{ item }} state=present
+  with_items:           postgresql_packages
+
+- postgresql_db:        name={{ domain }}
+  sudo_user:            postgres
+
+- postgresql_user:      db={{ domain }} name=deploy priv=ALL
+  sudo_user:            postgres
