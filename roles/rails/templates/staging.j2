@@ -5,7 +5,9 @@ server {
 	listen			80;
 	listen			[::]:80;
 	server_name  		staging.{{ domain }};
+
 	root			/var/staging/current/public;
+	passenger_ruby		/usr/local/bin/ruby;
 	passenger_enabled	on;
 	rails_env		staging;
 

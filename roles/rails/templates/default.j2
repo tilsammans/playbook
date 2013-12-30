@@ -6,6 +6,7 @@ server {
 	server_name		www.{{ domain }};
 
 	root			/var/www/current/public;
+	passenger_ruby		/usr/local/bin/ruby;
 	passenger_enabled	on;
 
 	ssl 			on;
