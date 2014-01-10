@@ -28,11 +28,13 @@
 
 - copy:       src=gemrc dest=/etc/gemrc
 
-- command:    "gem install bundler
-              creates=/usr/local/bin/bundle"
+- command:    gem install bundler
+              creates=/usr/local/bin/bundle
 
 - name:       Ensure the Phusion PGP key is installed
   apt_key:    id=AC40B2F7 state=present url="http://keyserver.ubuntu.com/pks/lookup?op=get&fingerprint=on&search=0x561F9B9CAC40B2F7"
+
+- apt:        pkg=apt-transport-https state=present
 
 - name:               Ensure the passenger apt repository is added
   apt_repository:     state=present repo='deb https://oss-binaries.phusionpassenger.com/apt/passenger precise main'

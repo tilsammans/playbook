@@ -9,7 +9,6 @@ ruby_dependencies:
 rails_dependencies:
   - libcurl4-openssl-dev
   - nodejs
-  - apt-transport-https
   - nginx-extras
   - passenger
 ruby_version:           "ruby-2.0.0-p353"
