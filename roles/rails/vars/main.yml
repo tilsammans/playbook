@@ -6,6 +6,8 @@ ruby_dependencies:
   - libssl-dev
   - zlib1g-dev
   - python-pycurl
+  - libreadline6
+  - libreadline6-dev
 rails_dependencies:
   - libcurl4-openssl-dev
   - nodejs
