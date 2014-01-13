@@ -7,6 +7,9 @@
                       key="{{ item }}"
   with_file:
     - joost-fabric.pub
+    - melanie-gashouder.pub
+    - annebeth-macbook.pub
+    - melanie-macbook.pub
 
 - name:       Install Ruby dependencies
   apt:        pkg={{ item }} state=present
