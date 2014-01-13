@@ -13,11 +13,18 @@ server {
 	ssl_certificate		/etc/ssl/private/{{ domain }}.cer;
 	ssl_certificate_key	/etc/ssl/private/{{ domain }}.key;
 
+	# SSL best practices for early 2014. Keep up to date: https://www.ssllabs.com/projects/best-practices/index.html
 	ssl_ciphers			RC4:HIGH:!aNULL:!MD5;
 	ssl_prefer_server_ciphers	on;
 	ssl_session_timeout		10m;
 	ssl_session_cache		shared:SSL:10m;
 
+	# Prevent spambots and viruses from hitting the computationally expensive Rails stack.
+	if ($http_user_agent ~* "(WebReaper|wget|SiteSucker|Mihov Picture Downloader|TALWinHttpClient|A1 Website Download|WebCopier|Download Ninja|Microsoft URL Control|GetRight|Arachmo|MJ12bot|Gaisbot|Anonymous|Yanga|Twiceler|psbot|Irvine|Indy Library|HTTrack)" ) {
+		return 403;
+	}
+
+	# Cache Rails assets for 1 year, which is RFC recommended.
 	location ~ ^/(assets|system)/ {
 		expires		1y;
 		add_header	Cache-Control public;
