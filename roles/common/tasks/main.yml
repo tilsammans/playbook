@@ -23,4 +23,7 @@
 - command:    ufw limit ssh
 - command:    ufw allow http
 - command:    ufw allow https
-- command:    ufw --force enable
+
+- name:       Enable ufw
+  command:    ufw --force enable
+  when:       "ufw_status.stdout.startswith('Status: inactive') or 'ENABLED=yes' not in ufw_config.stdout"
