@@ -19,6 +19,11 @@ server {
 	ssl_session_timeout		10m;
 	ssl_session_cache		shared:SSL:10m;
 
+	# Disallow any URI that ends in PHP. Stops script kiddies from touching Ruby.
+	location ~ \.php$ {
+		return 403;
+	}
+
 	# Cache Rails assets for 1 year, which is RFC recommended.
 	location ~ ^/(assets|system)/ {
 		expires		1y;
