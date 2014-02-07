@@ -19,10 +19,20 @@
   apt:        pkg={{ item }} state=present
   with_items: prerequisites
 
-- command:    ufw default deny
-- command:    ufw limit ssh
-- command:    ufw allow http
-- command:    ufw allow https
+- name:         Check status of ufw
+  command:      ufw status
+  register:     ufw_status
+  changed_when: False
+
+- name:         Check config of ufw
+  command:      cat /etc/ufw/ufw.conf
+  register:     ufw_config
+  changed_when: False
+
+- command:      ufw default deny
+- command:      ufw limit ssh
+- command:      ufw allow http
+- command:      ufw allow https
 
 - name:       Enable ufw
   command:    ufw --force enable
