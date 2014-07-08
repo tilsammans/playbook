@@ -1,23 +1,22 @@
----
-# Defines tasks applicable across all machines in the infrastructure.
+- name:         ensure packages are up to date
+  apt:          upgrade=yes update_cache=yes cache_valid_time=3600
 
-- apt:        upgrade=yes
-              update_cache=yes
-              cache_valid_time=3600
-
-- name:       Configure SSH to only allow key-based auth
-  lineinfile: dest=/etc/ssh/sshd_config
-              regexp="^#?PasswordAuthentication"
-              line="PasswordAuthentication no"
-  lineinfile: dest=/etc/ssh/sshd_config
-              regexp="^#?PubkeyAuthentication"
-              line="PubkeyAuthentication yes"
+- name:         Configure SSH to only allow key-based auth
+  lineinfile:   dest=/etc/ssh/sshd_config
+                regexp="^#?PasswordAuthentication"
+                line="PasswordAuthentication no"
+  lineinfile:   dest=/etc/ssh/sshd_config
+                regexp="^#?PubkeyAuthentication"
+                line="PubkeyAuthentication yes"
   notify:
     - Restart SSH
 
-- name:       Install essential packages for every server
-  apt:        pkg={{ item }} state=present
-  with_items: prerequisites
+- name:         install essential packages for every server
+  apt:          pkg={{ item }} state=present
+  with_items:
+    - ufw
+    - git-core
+    - unattended-upgrades
 
 - name:         Check status of ufw
   command:      ufw status
@@ -34,6 +33,16 @@
 - command:      ufw allow http
 - command:      ufw allow https
 
-- name:       Enable ufw
-  command:    ufw --force enable
-  when:       "ufw_status.stdout.startswith('Status: inactive') or 'ENABLED=yes' not in ufw_config.stdout"
+- name:         Enable ufw
+  command:      ufw --force enable
+  when:         "ufw_status.stdout.startswith('Status: inactive') or 'ENABLED=yes' not in ufw_config.stdout"
+
+- name:         check current timezone
+  shell:        cat /etc/timezone
+  register:     current_zone
+
+- name:         set timezone
+  copy:         content={{ timezone }} dest=/etc/timezone owner=root group=root mode=0644 backup=yes
+  when:         current_zone.stdout != timezone
+  notify:
+    - update timezone

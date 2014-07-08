@@ -1,5 +1,4 @@
 ---
 
-prerequisites:
-  - git-core
-  - unattended-upgrades
+domain: example.com
+timezone: 'UTC'
