@@ -1,0 +1,3 @@
+---
+- name:                 install sidekiq init script
+  template:             src=etc_init_sidekiq_production.conf.j2 dest=/etc/init/sidekiq_production.conf backup=yes

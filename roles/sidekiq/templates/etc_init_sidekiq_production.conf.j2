@@ -1,0 +1,15 @@
+description "Start Sidekiq production"
+
+start on runlevel [2345]
+stop on runlevel [06]
+
+setuid deploy
+
+chdir /var/www/vhosts/{{ domain }}/current
+
+respawn
+respawn limit 3 30
+
+normal exit 0 TERM USR1
+
+exec /usr/bin/env bundle exec sidekiq -i 0 -P tmp/sidekiq.pid -e production -C config/sidekiq.yml -L log/sidekiq.log

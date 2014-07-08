@@ -1,0 +1,6 @@
+---
+# Configure remote machine to be a Redis server.
+#
+- apt:                  pkg=redis-server state=present
+
+- service:              name=redis-server state=started
