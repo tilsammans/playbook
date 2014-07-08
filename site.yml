@@ -1,23 +1,9 @@
-# Ansible Playbook to manage Space Babies hosts
-# Based on https://github.com/jlund/mazer-rackham
 ---
-- hosts:        all
-  remote_user:  joost
-  sudo:         yes
-
-  roles:
-    - common
-
-- hosts:        rails
-  remote_user:  joost
-  sudo:         yes
-
+- hosts: rails
+  remote_user: ubuntu
+  sudo: yes
   roles:
     - rails
-
-- hosts:        postgresql
-  remote_user:  joost
-  sudo:         yes
-
-  roles:
+    - vhosts
     - postgresql
+    - sidekiq
