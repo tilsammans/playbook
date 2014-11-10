@@ -18,24 +18,10 @@
     - git-core
     - unattended-upgrades
 
-- name:         Check status of ufw
-  command:      ufw status
-  register:     ufw_status
-  changed_when: False
-
-- name:         Check config of ufw
-  command:      cat /etc/ufw/ufw.conf
-  register:     ufw_config
-  changed_when: False
-
-- command:      ufw default deny
-- command:      ufw limit ssh
-- command:      ufw allow http
-- command:      ufw allow https
-
-- name:         Enable ufw
-  command:      ufw --force enable
-  when:         "ufw_status.stdout.startswith('Status: inactive') or 'ENABLED=yes' not in ufw_config.stdout"
+- ufw:          state=enabled policy=deny
+- ufw:          rule=allow port=ssh
+- ufw:          rule=allow port=http
+- ufw:          rule=allow port=https
 
 - name:         check current timezone
   shell:        cat /etc/timezone

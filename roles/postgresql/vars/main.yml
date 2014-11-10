@@ -1,0 +1,5 @@
+---
+pg_production_user: www.example.com
+pg_production_pass: stfsle3J73fE7cHU
+pg_staging_user: staging.example.com
+pg_staging_pass: 6FlEilDuGK3mRem0

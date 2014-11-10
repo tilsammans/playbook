@@ -2,6 +2,9 @@
 - hosts: rails
   remote_user: ubuntu
   sudo: yes
+  vars_files:
+    - vars/defaults.yml
+    - vars/user.yml
   roles:
     - rails
     - vhosts

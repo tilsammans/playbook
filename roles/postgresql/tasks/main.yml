@@ -10,12 +10,10 @@
 
 - postgresql_db:        name={{ item }}
   sudo_user:            postgres
-  with_items:
-    - production.{{ domain }}
-    - staging.{{ domain }}
+  with_items:           virtualhosts
 
-- postgresql_user:      db={{ item }} name=deploy priv=ALL role_attr_flags=SUPERUSER
+- postgresql_user:      db={{ item.db }} name={{ item.name }} password={{ item.password }} priv=ALL role_attr_flags=SUPERUSER
   sudo_user:            postgres
   with_items:
-    - production.{{ domain }}
-    - staging.{{ domain }}
+    - { db: "www.strategiestrijd.nl", name: "{{ pg_production_user }}", password: "{{ pg_production_pass }}" }
+    - { db: "staging.strategiestrijd.nl", name: "{{ pg_staging_user }}", password: "{{ pg_staging_pass }}" }
