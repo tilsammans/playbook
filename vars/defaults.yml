@@ -1,2 +1,5 @@
 ---
-domain: spacebabies.nl
+domain: example.com
+virtualhosts:
+  - www.example.com
+  - staging.example.com

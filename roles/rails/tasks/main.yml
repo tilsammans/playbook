@@ -6,12 +6,8 @@
 - name:               Setup authorized keys for the deploy user
   authorized_key:     user=deploy
                       key="{{ item }}"
-  with_file:
-    - joost-air.pub
-    - joost-gashouder.pub
-    - melanie-gashouder.pub
-    - annebeth-macbook.pub
-    - melanie-macbook.pub
+  with_fileglob:
+    - *.pub
 
 - name:       Install Ruby dependencies
   apt:        pkg={{ item }} state=present

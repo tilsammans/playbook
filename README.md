@@ -9,14 +9,27 @@ You will need [Ansible](http://docs.ansible.com/intro_installation.html) version
 * PostgreSQL from ubuntu package
 * Redis from ubuntu package
 
+## How this works
+
+We use this playbook as follows:
+
+1. Clone the public git repo
+2. Rename origin to upstream: `git remote rename origin upstream`
+3. Configure the variables on a per-site basis (see below)
+4. Add a new private repo: `git remote add origin git@repo.com`
+5. Push to the origin: `git push -u origin master`
+6. From time to time, pull in new changes from upstream: `git pull upstream master`
+
 ## Installation and configuration
 
-To run the playbook, first install Ansible 1.6+ and put the hosts to be provisioned in `hosts.ini` as such:
+To run the playbook, first install Ansible 1.6+ and put the hosts to be provisioned in a file named `hosts.ini` as such:
 
 ```
 [rails]
-hostname.example.com
+www.example.com
 ```
+
+Then copy `vars/defaults.yml` to `vars/user.yml` and customize with the actual values.
 
 # https
 

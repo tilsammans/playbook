@@ -1,2 +1,5 @@
 ---
 timezone: 'UTC'
+ubuntu_keys:
+  - joost-gashouder.pub
+  - joost-fabric.pub
